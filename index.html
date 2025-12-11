@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLS 基本救命術學習 APP</title>
+    <style>
+        :root { --primary: #e63946; --secondary: #457b9d; --accent: #1d3557; --bg: #f1faee; --text: #333; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { max-width: 600px; width: 100%; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h1, h2, h3 { text-align: center; color: var(--accent); margin-top: 0; }
+        h1 { font-size: 1.6rem; color: var(--primary); }
+        
+        /* 按鈕樣式 */
+        .btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; background: var(--secondary); color: white; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn:active { transform: scale(0.98); }
+        .btn-home { background: #6c757d; }
+        .btn-learn { background: #2a9d8f; } /* 學習區顏色 */
+        
+        /* 選項按鈕 */
+        .btn-option { background: #f8f9fa; color: #333; border: 2px solid #e9ecef; text-align: left; font-weight: normal; }
+        .btn-option:hover { border-color: var(--secondary); }
+        .btn-option.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+        .btn-option.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        
+        /* 學習區樣式 */
+        .learning-content { text-align: left; line-height: 1.6; }
+        .learning-card { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--secondary); }
+        .learning-card h3 { text-align: left; color: var(--secondary); margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 1.2rem; }
+        .highlight { color: #d62828; font-weight: bold; background: #fff3cd; padding: 0 4px; border-radius: 4px; }
+        .sub-title { font-weight: bold; color: var(--accent); margin-top: 10px; display: block; }
+        ul, ol { padding-left: 20px; margin: 5px 0; }
+        li { margin-bottom: 6px; }
+
+        /* 表格樣式 */
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        .comparison-table th { background-color: var(--secondary); color: white; }
+        .comparison-table tr:nth-child(even) { background-color: #f2f2f2; }
+
+        /* 通用 */
+        .hidden { display: none; }
+        #explanation { margin-top: 15px; padding: 15px; background: #e9ecef; border-radius: 8px; font-size: 0.95rem; line-height: 1.5; border-left: 4px solid var(--accent); }
+        .progress-bar { width: 100%; height: 10px; background: #e9ecef; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="home-screen">
+    <h1>🚑 BLS 基本救命術<br>行動學習站</h1>
+    <p style="text-align: center; color: #666;">2020年版指引重點教材</p>
+    
+    <button class="btn btn-learn" onclick="showScreen('learning-screen')">📖 學習重點歸納 (五大領域)</button>
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+    <button class="btn" onclick="startQuiz('unit1')">📝 單元一：基礎觀念與 CPR</button>
+    <button class="btn" onclick="startQuiz('unit2')">⚡ 單元二：AED 與 異物梗塞</button>
+</div>
+
+<div class="container hidden" id="learning-screen">
+    <h2>📖 BLS 學習重點歸納</h2>
+    <div class="learning-content">
+        
+        <div class="learning-card">
+            <h3>1. 生存之鏈 (Chain of Survival)</h3>
+            <p>急救成功的基礎，2020年版新增第六環。</p>
+            <span class="sub-title">成人院外心跳停止 (OHCA) 順序 [cite: 9, 15]：</span>
+            <ol>
+                <li>早期求救</li>
+                <li>早期高品質 CPR</li>
+                <li>早期電擊去顫</li>
+                <li>早期高級心臟救命術</li>
+                <li>整合之心臟停止後照護</li>
+                <li><span class="highlight">復原 (Recovery)</span></li>
+            </ol>
+            <p><strong>「復原」定義 [cite: 36, 37]：</strong>包含對存活者的身體、神經、心肺功能及認知失能的評估，以及包含照護者在內的多方位出院與復健計畫。</p>
+            
+            <span class="sub-title">求救時機 (單人施救者) [cite: 56-59]：</span>
+            <ul>
+                <li><strong>一般狀況</strong>：先求救、拿AED，再回來做CPR。</li>
+                <li><strong>先急救再求救 (Call Fast)</strong>：若是<span class="highlight">溺水、藥物中毒、創傷或小兒</span>（視為呼吸道問題導致），應先執行 <span class="highlight">2分鐘 CPR</span> 再去求救。</li>
+            </ul>
+        </div>
+
+        <div class="learning-card">
+            <h3>2. 高品質 CPR 操作要點</h3>
+            <p>按壓質量是救命關鍵 [cite: 3, 27]。</p>
+            <ul>
+                <li><strong>按壓速率</strong>：每分鐘 <span class="highlight">100-120 次</span> [cite: 24, 77]。</li>
+                <li><strong>按壓深度</strong>：
+                    <ul>
+                        <li>成人：<span class="highlight">5-6 公分</span> [cite: 28]。</li>
+                        <li>兒童：5公分 或 胸廓厚度 1/3 [cite: 29]。</li>
+                        <li>嬰兒：4公分 或 胸廓厚度 1/3 [cite: 30]。</li>
+                    </ul>
+                </li>
+                <li><strong>按壓與吹氣比例</strong>：
+                    <ul>
+                        <li>成人：一律 <span class="highlight">30:2</span> [cite: 41]。</li>
+                        <li>兒童/嬰兒：單人 30:2，<span class="highlight">雙人醫護改為 15:2</span> [cite: 46]。</li>
+                    </ul>
+                </li>
+                <li><strong>胸部回彈</strong>：每次按壓須完全回彈，不可倚靠胸壁 [cite: 25]。</li>
+                <li><strong>中斷時間</strong>：每 2分鐘 (約5個循環) 檢查一次心律，中斷越短越好 [cite: 42, 76]。</li>
+                <li><strong>人工呼吸</strong>：吹氣 > 1秒，見胸部起伏即可 [cite: 46]。若吹氣失敗，重新暢通呼吸道再吹第二口 [cite: 173]。</li>
+                <li><strong>只缺呼吸 (有脈搏無呼吸)</strong>：給予人工呼吸，頻率為 <span class="highlight">每6秒1口氣</span> (每分鐘10次) [cite: 50, 55]。</li>
+            </ul>
+        </div>
+
+        <div class="learning-card">
+            <h3>3. 自動體外去顫器 (AED)</h3>
+            <ul>
+                <li><strong>黃金時間</strong>：院外目標 <span class="highlight">5分鐘內</span>；院內目標 3分鐘內 [cite: 16, 20]。</li>
+                <li><strong>操作四步驟</strong>：開 → 貼 → 插(分析) → 電 [cite: 104]。</li>
+                <li><strong>電極片位置 [cite: 101]</strong>：
+                    <ul>
+                        <li>右鎖骨中線 (胸骨柄旁)。</li>
+                        <li>左前腋中線 (乳頭外下方/心尖處)。</li>
+                    </ul>
+                </li>
+                <li><strong>特殊情況處理</strong>：
+                    <ul>
+                        <li><strong>潮濕/溺水</strong>：擦乾胸前水分再貼 [cite: 99]。</li>
+                        <li><strong>藥物貼片</strong>：移除並擦拭乾淨 [cite: 97]。</li>
+                        <li><strong>心律調節器 (ICD)</strong>：避開突起處；若正電擊(抽動)，等30-60秒 [cite: 137, 139]。</li>
+                        <li><strong>兒童</strong>：優先用兒童貼片/模式，若無可用成人貼片 [cite: 140]。</li>
+                    </ul>
+                </li>
+                <li><strong>電擊後處置</strong>：電擊完(或不建議電擊)，<span class="highlight">立即繼續 CPR</span>，不要摸脈搏 [cite: 114]。做完 2分鐘後 AED 會再自動分析。</li>
+            </ul>
+        </div>
+
+        <div class="learning-card">
+            <h3>4. 呼吸道異物阻塞 (FBAO)</h3>
+            <ul>
+                <li><strong>輕微阻塞</strong>：能發聲、咳嗽 → <span class="highlight">鼓勵用力咳嗽</span> [cite: 158]。</li>
+                <li><strong>嚴重阻塞 (意識清醒)</strong>：
+                    <ul>
+                        <li>一般成人/兒童：哈姆立克法 (腹部按壓) [cite: 153]。</li>
+                        <li>孕婦/肥胖者：<span class="highlight">胸部按壓</span> [cite: 183, 185]。</li>
+                    </ul>
+                </li>
+                <li><strong>嚴重阻塞 (意識喪失)</strong>：
+                    <ul>
+                        <li>立即平躺，開始 CPR [cite: 158]。</li>
+                        <li><strong>差異點</strong>：每次壓胸 30 下後，<span class="highlight">先檢查口中有無異物</span> (有看到才挖)，再嘗試吹氣 [cite: 155]。</li>
+                        <li>壓胸比壓腹更能產生高壓排出異物。</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="learning-card">
+            <h3>5. 其他觀念與總結</h3>
+            <ul>
+                <li><strong>瀕死喘息 (Agonal gasps)</strong>：看似喘氣但非正常呼吸，應視為心跳停止，<span class="highlight">立即 CPR</span> [cite: 43]。</li>
+                <li><strong>終止 CPR 時機</strong>：ALS 介入無效且與家屬達成共識後 [cite: 66]。</li>
+            </ul>
+
+            <span class="sub-title" style="text-align:center; margin-top:15px;">學習總結表：成人 vs 兒童/嬰兒</span>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>成人</th>
+                        <th>兒童/嬰兒</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>按壓深度</td>
+                        <td>5-6 cm</td>
+                        <td>兒童 5cm<br>嬰兒 4cm</td>
+                    </tr>
+                    <tr>
+                        <td>按壓速率</td>
+                        <td colspan="2">100-120 次/分</td>
+                    </tr>
+                    <tr>
+                        <td>單人比例</td>
+                        <td>30:2</td>
+                        <td>30:2</td>
+                    </tr>
+                    <tr>
+                        <td>雙人比例</td>
+                        <td>30:2</td>
+                        <td class="highlight">15:2 (醫護)</td>
+                    </tr>
+                    <tr>
+                        <td>求救時機</td>
+                        <td>先求救</td>
+                        <td>先 CPR 2分<br>(單人目擊)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <button class="btn btn-home" onclick="showScreen('home-screen')">🏠 返回首頁</button>
+</div>
+
+<div class="container hidden" id="quiz-screen">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span id="quiz-title" style="font-weight: bold; color: var(--secondary);">單元測驗</span>
+        <button onclick="showScreen('home-screen')" style="background:none; border:none; color: #999; cursor: pointer;">✕ 退出</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div id="question-text" style="font-weight: bold; margin-bottom: 20px; font-size: 1.15rem; line-height: 1.4;"></div>
+    <div id="options-container"></div>
+    <div id="explanation" class="hidden"></div>
+    <button class="btn hidden" id="next-btn" onclick="nextQuestion()">下一題</button>
+</div>
+
+<div class="container hidden" id="result-screen">
+    <h2>測驗完成！</h2>
+    <div style="font-size: 3rem; font-weight: bold; color: var(--primary); margin: 20px 0;" id="final-score"></div>
+    <p id="result-comment" style="text-align: center; color: #555;"></p>
+    <button class="btn" onclick="location.reload()">🔄 回到首頁</button>
+</div>
+
+<script src="questions.js"></script>
+<script>
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let isAnswered = false;
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
+        document.getElementById(screenId).classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    function shuffle(array) {
+        let copy = [...array];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function startQuiz(unit) {
+        if (unit === 'unit1') currentQuestions = shuffle(questionData.unit1);
+        else if (unit === 'unit2') currentQuestions = shuffle(questionData.unit2);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('quiz-title').innerText = unit === 'unit1' ? '單元一：基礎觀念' : '單元二：AED與梗塞';
+        showScreen('quiz-screen');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        isAnswered = false;
+        const qData = currentQuestions[currentQuestionIndex];
+        
+        const progressPercent = ((currentQuestionIndex) / currentQuestions.length) * 100;
+        document.getElementById('progress').style.width = `${progressPercent}%`;
+
+        document.getElementById('question-text').innerText = `Q${currentQuestionIndex + 1}. ${qData.q}`;
+        document.getElementById('explanation').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+
+        const optionsDiv = document.getElementById('options-container');
+        optionsDiv.innerHTML = '';
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, qData.ans, btn);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, correctIndex, btnElement) {
+        if (isAnswered) return;
+        isAnswered = true;
+
+        const options = document.querySelectorAll('.btn-option');
+        if (selectedIndex === correctIndex) {
+            btnElement.classList.add('correct');
+            score++;
+        } else {
+            btnElement.classList.add('wrong');
+            options[correctIndex].classList.add('correct');
+        }
+
+        const explDiv = document.getElementById('explanation');
+        explDiv.innerHTML = `<strong>💡 解析：</strong><br>${currentQuestions[currentQuestionIndex].note}`;
+        explDiv.classList.remove('hidden');
+        
+        setTimeout(() => explDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        showScreen('result-screen');
+        document.getElementById('final-score').innerText = `${score} / ${currentQuestions.length}`;
+        
+        let comment = "";
+        const percentage = (score / currentQuestions.length);
+        if(percentage === 1) comment = "太強了！完全掌握救命關鍵！🏆";
+        else if(percentage >= 0.8) comment = "很棒！觀念非常清楚！👍";
+        else if(percentage >= 0.6) comment = "及格邊緣，建議再複習一下喔！🤔";
+        else comment = "別灰心，去「重點整理」區加強一下吧！💪";
+        
+        document.getElementById('result-comment').innerText = comment;
+    }
+</script>
+</body>
+</html>
