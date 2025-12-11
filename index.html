@@ -15,7 +15,7 @@
         .btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; background: var(--secondary); color: white; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .btn:active { transform: scale(0.98); }
         .btn-home { background: #6c757d; }
-        .btn-learn { background: #2a9d8f; } /* 學習區顏色 */
+        .btn-learn { background: #2a9d8f; } 
         
         /* 選項按鈕 */
         .btn-option { background: #f8f9fa; color: #333; border: 2px solid #e9ecef; text-align: left; font-weight: normal; }
@@ -30,13 +30,19 @@
         .highlight { color: #d62828; font-weight: bold; background: #fff3cd; padding: 0 4px; border-radius: 4px; }
         .sub-title { font-weight: bold; color: var(--accent); margin-top: 10px; display: block; }
         ul, ol { padding-left: 20px; margin: 5px 0; }
-        li { margin-bottom: 6px; }
+        li { margin-bottom: 8px; }
 
-        /* 表格樣式 */
-        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
-        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        /* 表格樣式 (響應式優化) */
+        .table-container { overflow-x: auto; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; min-width: 400px; }
+        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; }
         .comparison-table th { background-color: var(--secondary); color: white; }
         .comparison-table tr:nth-child(even) { background-color: #f2f2f2; }
+        .comparison-table .row-header { background-color: #e9ecef; font-weight: bold; width: 20%; }
+
+        /* 流程步驟樣式 */
+        .step-box { background: white; border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 5px; font-size: 0.9rem; }
+        .arrow-down { text-align: center; color: #aaa; font-weight: bold; margin: -5px 0; }
 
         /* 通用 */
         .hidden { display: none; }
@@ -49,9 +55,9 @@
 
 <div class="container" id="home-screen">
     <h1>🚑 BLS 基本救命術<br>行動學習站</h1>
-    <p style="text-align: center; color: #666;">2020年版指引重點教材</p>
+    <p style="text-align: center; color: #666;">2020年版指引 & 衛福部摘要</p>
     
-    <button class="btn btn-learn" onclick="showScreen('learning-screen')">📖 學習重點歸納 (五大領域)</button>
+    <button class="btn btn-learn" onclick="showScreen('learning-screen')">📖 學習重點歸納 (含流程圖)</button>
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
     <button class="btn" onclick="startQuiz('unit1')">📝 單元一：基礎觀念與 CPR</button>
     <button class="btn" onclick="startQuiz('unit2')">⚡ 單元二：AED 與 異物梗塞</button>
@@ -62,137 +68,114 @@
     <div class="learning-content">
         
         <div class="learning-card">
-            <h3>1. 生存之鏈 (Chain of Survival)</h3>
-            <p>急救成功的基礎，2020年版新增第六環。</p>
-            <span class="sub-title">成人院外心跳停止 (OHCA) 順序：</span>
+            <h3>1. 民眾版心肺復甦術指引摘要</h3>
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="width:15%">項目</th>
+                            <th>成人 (≥8歲)</th>
+                            <th>兒童 (1-8歲)</th>
+                            <th>嬰兒 (<1歲)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-header">求救</td>
+                            <td>先打 119</td>
+                            <td colspan="2">先打 119<br><span class="highlight" style="font-size:0.8rem">若單人無手機：先做5循環CPR再求救</span></td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">按壓位置</td>
+                            <td>兩乳頭連線中央<br>(胸骨下半段)</td>
+                            <td>兩乳頭連線中央<br>(胸骨下半段)</td>
+                            <td>兩乳頭連線<br>中央之下方</td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">深度</td>
+                            <td>5 ~ 6 公分</td>
+                            <td>約 5 公分<br>(胸厚 1/3)</td>
+                            <td>約 4 公分<br>(胸厚 1/3)</td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">速率</td>
+                            <td colspan="3">100 ~ 120 次/分鐘</td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">比例</td>
+                            <td colspan="3">30 : 2 (壓胸30次 : 吹氣2次)</td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">AED</td>
+                            <td>成人貼片</td>
+                            <td colspan="2">優先用兒童貼片<br>(無則用成人貼片)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">*資料來源：衛生福利部 110年4月修訂版</p>
+        </div>
+
+        <div class="learning-card">
+            <h3>2. 急救流程步驟 (叫叫CD)</h3>
+            
+            <span class="sub-title">通用流程 (所有年齡)：</span>
+            <div class="step-box">1. 確認現場安全</div>
+            <div class="arrow-down">↓</div>
+            <div class="step-box">2. (叫) 確認意識：拍肩呼叫 (嬰兒拍腳底)</div>
+            <div class="arrow-down">↓</div>
+            <div class="step-box">3. (叫) 大聲呼救、打119、取得 AED<br>
+            <span style="color:#666; font-size:0.85rem">★ 手機開擴音，勿離開病人</span></div>
+            <div class="arrow-down">↓</div>
+            <div class="step-box">4. (C) 確認呼吸：<br>若無呼吸或幾乎無呼吸 (瀕死喘息) → <span class="highlight">立即開始按壓</span></div>
+            
+            <span class="sub-title" style="margin-top:15px;">分支：CPR 操作細節</span>
+            <ul>
+                <li><strong>成人完整版：</strong>按壓 30 下 → 人工呼吸 2 次 (若受過訓練且有意願)。</li>
+                <li><strong>成人簡易版 (Hands-Only)：</strong>持續胸外按壓不中斷，直到 AED 到達或接手。</li>
+                <li><strong>兒童/嬰兒版：</strong>每壓 30 次給予 2 次人工呼吸 (建議執行)。</li>
+            </ul>
+
+            <span class="sub-title" style="margin-top:15px;">5. (D) AED 使用</span>
+            <div class="step-box">AED 到達 → 開機 → 貼貼片 → 聽指示<br>
+            <span class="highlight">電擊後 (或不建議電擊) → 立即恢復 CPR</span></div>
+        </div>
+
+        <div class="learning-card">
+            <h3>3. 生存之鏈 (2020新增第六環)</h3>
             <ol>
                 <li>早期求救</li>
                 <li>早期高品質 CPR</li>
-                <li>早期電擊去顫</li>
+                <li>早期電擊 (Defibrillation)</li>
                 <li>早期高級心臟救命術</li>
-                <li>整合之心臟停止後照護</li>
+                <li>心臟停止後照護</li>
                 <li><span class="highlight">復原 (Recovery)</span></li>
             </ol>
-            <p><strong>「復原」定義 ：</strong>包含對存活者的身體、神經、心肺功能及認知失能的評估，以及包含照護者在內的多方位出院與復健計畫。</p>
-            
-            <span class="sub-title">求救時機 (單人施救者) ：</span>
+        </div>
+
+        <div class="learning-card">
+            <h3>4. 高品質 CPR 五大要點</h3>
             <ul>
-                <li><strong>一般狀況</strong>：先求救、拿AED，再回來做CPR。</li>
-                <li><strong>先急救再求救 (Call Fast)</strong>：若是<span class="highlight">溺水、藥物中毒、創傷或小兒</span>（視為呼吸道問題導致），應先執行 <span class="highlight">2分鐘 CPR</span> 再去求救。</li>
+                <li><strong>快快壓</strong>：速率 100-120 次/分。</li>
+                <li><strong>用力壓</strong>：成人 5-6 公分 (兒童/嬰兒 1/3 胸厚)。</li>
+                <li><strong>胸回彈</strong>：每次按壓須讓胸部完全回彈。</li>
+                <li><strong>莫中斷</strong>：中斷時間不超過 10 秒。</li>
+                <li><strong>避免過度通氣</strong>：吹氣 1 秒，見胸起伏即可。</li>
             </ul>
         </div>
 
         <div class="learning-card">
-            <h3>2. 高品質 CPR 操作要點</h3>
-            <p>按壓質量是救命關鍵 。</p>
+            <h3>5. 呼吸道異物梗塞 (FBAO)</h3>
             <ul>
-                <li><strong>按壓速率</strong>：每分鐘 <span class="highlight">100-120 次</span> 。</li>
-                <li><strong>按壓深度</strong>：
-                    <ul>
-                        <li>成人：<span class="highlight">5-6 公分</span> 。</li>
-                        <li>兒童：5公分 或 胸廓厚度 1/3 。</li>
-                        <li>嬰兒：4公分 或 胸廓厚度 1/3 。</li>
-                    </ul>
-                </li>
-                <li><strong>按壓與吹氣比例</strong>：
-                    <ul>
-                        <li>成人：一律 <span class="highlight">30:2</span> 。</li>
-                        <li>兒童/嬰兒：單人 30:2，<span class="highlight">雙人醫護改為 15:2</span> 。</li>
-                    </ul>
-                </li>
-                <li><strong>胸部回彈</strong>：每次按壓須完全回彈，不可倚靠胸壁 。</li>
-                <li><strong>中斷時間</strong>：每 2分鐘 (約5個循環) 檢查一次心律，中斷越短越好 。</li>
-                <li><strong>人工呼吸</strong>：吹氣 > 1秒，見胸部起伏即可。若吹氣失敗，重新暢通呼吸道再吹第二口。</li>
-                <li><strong>只缺呼吸 (有脈搏無呼吸)</strong>：給予人工呼吸，頻率為 <span class="highlight">每6秒1口氣</span> (每分鐘10次)。</li>
-            </ul>
-        </div>
-
-        <div class="learning-card">
-            <h3>3. 自動體外去顫器 (AED)</h3>
-            <ul>
-                <li><strong>黃金時間</strong>：院外目標 <span class="highlight">5分鐘內</span>；院內目標 3分鐘內。</li>
-                <li><strong>操作四步驟</strong>：開 → 貼 → 插(分析) → 電。</li>
-                <li><strong>電極片位置</strong>：
-                    <ul>
-                        <li>右鎖骨中線 (胸骨柄旁)。</li>
-                        <li>左前腋中線 (乳頭外下方/心尖處)。</li>
-                    </ul>
-                </li>
-                <li><strong>特殊情況處理</strong>：
-                    <ul>
-                        <li><strong>潮濕/溺水</strong>：擦乾胸前水分再貼。</li>
-                        <li><strong>藥物貼片</strong>：移除並擦拭乾淨。</li>
-                        <li><strong>心律調節器 (ICD)</strong>：避開突起處；若正電擊(抽動)，等30-60秒。</li>
-                        <li><strong>兒童</strong>：優先用兒童貼片/模式，若無可用成人貼片。</li>
-                    </ul>
-                </li>
-                <li><strong>電擊後處置</strong>：電擊完(或不建議電擊)，<span class="highlight">立即繼續 CPR</span>，不要摸脈搏。做完 2分鐘後 AED 會再自動分析。</li>
-            </ul>
-        </div>
-
-        <div class="learning-card">
-            <h3>4. 呼吸道異物阻塞 (FBAO)</h3>
-            <ul>
-                <li><strong>輕微阻塞</strong>：能發聲、咳嗽 → <span class="highlight">鼓勵用力咳嗽</span>。</li>
-                <li><strong>嚴重阻塞 (意識清醒)</strong>：
-                    <ul>
-                        <li>一般成人/兒童：哈姆立克法 (腹部按壓)。</li>
-                        <li>孕婦/肥胖者：<span class="highlight">胸部按壓</span>。</li>
-                    </ul>
-                </li>
-                <li><strong>嚴重阻塞 (意識喪失)</strong>：
-                    <ul>
-                        <li>立即平躺，開始 CPR。</li>
-                        <li><strong>差異點</strong>：每次壓胸 30 下後，<span class="highlight">先檢查口中有無異物</span> (有看到才挖)，再嘗試吹氣 。</li>
-                        <li>壓胸比壓腹更能產生高壓排出異物。</li>
-                    </ul>
+                <li><strong>清醒 (嚴重阻塞)</strong>：哈姆立克法 (孕婦/肥胖者改胸部按壓)。</li>
+                <li><strong>昏迷 (意識喪失)</strong>：
+                    <ol>
+                        <li>讓病人平躺。</li>
+                        <li><strong>開始 CPR</strong>。</li>
+                        <li><strong>差異點</strong>：每次壓胸 30 下後，<span class="highlight">檢查口中有無異物</span> (有看到才挖)，再吹氣。</li>
+                    </ol>
                 </li>
             </ul>
-        </div>
-
-        <div class="learning-card">
-            <h3>5. 其他觀念與總結</h3>
-            <ul>
-                <li><strong>瀕死喘息 (Agonal gasps)</strong>：看似喘氣但非正常呼吸，應視為心跳停止，<span class="highlight">立即 CPR</span>。</li>
-                <li><strong>終止 CPR 時機</strong>：ALS 介入無效且與家屬達成共識後。</li>
-            </ul>
-
-            <span class="sub-title" style="text-align:center; margin-top:15px;">學習總結表：成人 vs 兒童/嬰兒</span>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>項目</th>
-                        <th>成人</th>
-                        <th>兒童/嬰兒</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>按壓深度</td>
-                        <td>5-6 cm</td>
-                        <td>兒童 5cm<br>嬰兒 4cm</td>
-                    </tr>
-                    <tr>
-                        <td>按壓速率</td>
-                        <td colspan="2">100-120 次/分</td>
-                    </tr>
-                    <tr>
-                        <td>單人比例</td>
-                        <td>30:2</td>
-                        <td>30:2</td>
-                    </tr>
-                    <tr>
-                        <td>雙人比例</td>
-                        <td>30:2</td>
-                        <td class="highlight">15:2 (醫護)</td>
-                    </tr>
-                    <tr>
-                        <td>求救時機</td>
-                        <td>先求救</td>
-                        <td>先 CPR 2分<br>(單人目擊)</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
     </div>
